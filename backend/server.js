@@ -3,7 +3,7 @@ require('dotenv').config();
 const app = express();
 
 // mongodb
-const {connectDB} = require('./config/db')
+const connectDB = require('./config/db')
 connectDB()
 
 app.use(express.json());
