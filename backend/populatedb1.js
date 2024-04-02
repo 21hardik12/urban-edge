@@ -4,7 +4,7 @@ const fs = require('fs');
 require('dotenv').config()
 
 const db = mongoose.connection;
-const rawData = fs.readFileSync('./dataset1.json');
+const rawData = fs.readFileSync('./dataset.json');
 const data = JSON.parse(rawData);
 
 function parseProductDetailsString(str) {
@@ -24,29 +24,32 @@ function parseProductDetailsString(str) {
 
 (async () => {
   try {
-    await mongoose.connect(process.env.mongoDb);
+    await mongoose.connect(process.env.mongodb);
     console.log('Connected to MongoDB');
-
-    const entryToInsert = data[0];
-    const features = entryToInsert.features.map(feature => {
-      const [name, value] = Object.entries(feature)[0];
-      return { name, value };
-    });  
-
-    const product = new Product({
-      url: entryToInsert.url,
-      title: entryToInsert.title,
-      asin: entryToInsert.asin,
-      price: entryToInsert.price,
-      brand: entryToInsert.brand,
-      product_details: entryToInsert.product_details,
-      breadcrumbs: entryToInsert.breadcrumbs,
-      images_list: entryToInsert.images_list,
-      features: features
-    });
-
-    await product.save();
-    console.log('Product saved to database');
+    const entriesToInsert = data.slice(0, 100);
+    for (const entryToInsert of entriesToInsert) {
+      const features = entryToInsert.features.map(feature => {
+        const [name, value] = Object.entries(feature)[0];
+        return { name, value };
+      });  
+      
+      const product__details = parseProductDetailsString(entryToInsert.product_details);
+      
+      const product = new Product({
+        url: entryToInsert.url,
+        title: entryToInsert.title,
+        asin: entryToInsert.asin,
+        price: entryToInsert.price,
+        brand: entryToInsert.brand,
+        product_details: product__details,
+        breadcrumbs: entryToInsert.breadcrumbs,
+        images_list: entryToInsert.images_list,
+        features: features
+      });
+      
+      await product.save();
+      console.log('Product saved to database');
+    }
   
   } catch (err) {
     console.error('Error:', err);

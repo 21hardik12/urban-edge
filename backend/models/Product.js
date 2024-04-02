@@ -7,7 +7,15 @@ const productSchema = new mongoose.Schema({
   asin: String,
   price: String,
   brand: String,
-  product_details: {type: String},
+  product_details: {
+    'Package Dimensions': String,
+    'Date First Availabe': String,
+    Manufacturer: String,
+    ASIN: String,
+    'Item model number': String,
+    'Country of origin': String,
+    Department: String
+  },
   breadcrumbs: String,
   images_list: [String],
   features: [{
