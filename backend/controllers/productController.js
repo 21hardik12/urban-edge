@@ -16,10 +16,29 @@ exports.getProducts = asyncHandler(async (req, res) => {
 exports.getProductById = asyncHandler(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
     if (!product) {
-        const err = new Error('Product not found');
-        err.status = 404;
-        return next(err);
+        res.status(404).json({message: 'Product not found'});
     }
 
     res.json(product)
+})
+
+// @desc create a product
+// @route POST /api/products
+// @access Private (admin)
+exports.createProduct = asyncHandler(async (req, res) => {
+    
+})
+
+// @desc update a product
+// @route PUT /api/products
+// @access Private (admin)
+exports.updateProduct = asyncHandler(async (req, res) => {
+    
+})
+
+// @desc delete a product
+// @route DELETE /api/products
+// @access Private (admin)
+exports.deleteProduct = asyncHandler(async (req, res) => {
+    
 })
